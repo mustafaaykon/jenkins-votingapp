@@ -7,20 +7,15 @@ pipeline {
                     script{
                         def login = ecrLogin()
                         def images = ecrListImages(repositoryName: 'jenkins_votingapp')
+                        docker.withRegistry('${env.ECR_REPO_REGISTRY}') {
+                            def testImage = docker.build("./vote", '${env.ECR_REPO_REGISTRY}/jenkins_votingapp_vote:latest')
+                        }
                         //sh 'printenv'
                     }
                 }
             }
         }
-        stage ('Build') {
-            steps {
-                docker.withRegistry('${env.ECR_REPO_REGISTRY}') {
-                    script {
-                        def testImage = docker.build("./vote", '${env.ECR_REPO_REGISTRY}/jenkins_votingapp_vote:latest')
-                        }
-                    }
-                }
-        }
+
         // stage ('Push ECR') {
         //     steps {
         //         withEnv (['ECR_REPO_REGISTRY=${env.ECR_REPO_REGISTRY}'])
