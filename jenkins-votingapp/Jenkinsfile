@@ -3,16 +3,15 @@ pipeline {
     stages {
         stage ('Build') {
             steps {
-                sh 'sudo apt-get update'
-                sh 'sudo apt install docker.io'
-                sh 'sudo systemctl start docker'
-                sh 'sudo systemctl enable docker'
+                sh 'apt install docker.io'
+                sh 'systemctl start docker'
+                sh 'systemctl enable docker'
                 sh 'docker --version'
                 sh 'echo docker installed successfully...'
                 sh """curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \n
                     unzip awscliv2.zip \n
-                    sudo ./aws/install"""
-                sh '$ sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update'
+                    ./aws/install"""
+                sh './aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update'
                 sh 'aws cli installed successfully...'
                 sh 'printenv'
             }
