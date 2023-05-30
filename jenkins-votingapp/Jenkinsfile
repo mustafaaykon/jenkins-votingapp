@@ -8,7 +8,7 @@ pipeline {
                     }
                 }
             }
-        }
+        
         stage ('Push ECR') {
             steps {
                 withEnv (['ECR_REPO_REGISTRY=${env.ECR_REPO_REGISTRY}'])
@@ -30,3 +30,4 @@ pipeline {
             }
         }
     }
+}
