@@ -3,8 +3,8 @@ pipeline {
     stages {
         stage ('Build') {
             steps {
-                withAWS(region: 'us-east-1', credentials: 'aws_access'){
-                    sh 'printenv'
+                docker.build(path: './vote', tag: 'ECR_REPO_REGISTRY/jenkins_votingapp_vote:latest')
+                   
                 }
             }
         }
