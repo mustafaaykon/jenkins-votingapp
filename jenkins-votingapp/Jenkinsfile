@@ -3,12 +3,14 @@ pipeline {
     stages {
         stage ('Build') {
             steps {
-                sh 'printenv'
+                withAWS(region: 'us-east-1', credentials: 'aws_access'){
+                    sh 'printenv'
+                }
             }
         }
         stage ('Push ECR') {
             steps {
-                withEnv (['AWS_ACCESS_KEY_ID=${env.ACCESS_KEY_ID}', 'AWS_SECRET_ACCESS_KEY=${env.SECRET_ACCESS_KEY}', 'AWS_DEFAULT_REGION=${env.REGION}', 'ECR_REPO_REGISTRY=${env.ECR_REPO_REGISTRY}'])
+                withEnv (['ECR_REPO_REGISTRY=${env.ECR_REPO_REGISTRY}'])
                 {
                     sh 'aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPO_REGISTRY'
                     sh 'docker build -t --platform=linux/amd64 ECR_REPO_REGISTRY/jenkins_votingapp_vote:latest ./vote'
