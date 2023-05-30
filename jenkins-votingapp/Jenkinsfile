@@ -7,8 +7,8 @@ pipeline {
                     script{
                         def login = ecrLogin()
                         def images = ecrListImages(repositoryName: 'jenkins_votingapp')
-                        docker.withRegistry('${env.ECR_REPO_REGISTRY}') {
-                            def testImage = docker.build("./vote", '${env.ECR_REPO_REGISTRY}/jenkins_votingapp_vote:latest')
+                        docker.withRegistry('762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp') {
+                            def testImage = docker.build("./vote", "762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_vote:latest")
                         }
                         //sh 'printenv'
                     }
