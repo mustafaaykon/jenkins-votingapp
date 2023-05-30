@@ -4,8 +4,10 @@ pipeline {
         stage ('Build') {
             steps {
                 withAWS(region: 'us-east-1', credentials: 'aws_access'){
-                    AWS("s3 ls")
-                    sh 'printenv'
+                    script{
+                        def login = ecrLogin()
+                        //sh 'printenv'
+                    }
                 }
             }
         }
