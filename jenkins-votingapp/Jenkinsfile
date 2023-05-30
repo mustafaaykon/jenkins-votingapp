@@ -3,12 +3,12 @@ pipeline {
     stages {
         stage ('Build') {
             steps {
-                script {
-                    docker.build(path: './vote', tag: 'ECR_REPO_REGISTRY/jenkins_votingapp_vote:latest')
-                    }
+                withAWS(region: 'us-east-1', credentials: 'aws_access'){
+                    AWS("s3 ls")
+                    sh 'printenv'
                 }
             }
-        
+        }
         stage ('Push ECR') {
             steps {
                 withEnv (['ECR_REPO_REGISTRY=${env.ECR_REPO_REGISTRY}'])
