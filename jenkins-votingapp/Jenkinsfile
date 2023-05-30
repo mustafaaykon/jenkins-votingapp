@@ -6,6 +6,7 @@ pipeline {
                 withAWS(region: 'us-east-1', credentials: 'aws_access'){
                     script{
                         def login = ecrLogin()
+                        def images = ecrListImages(repositoryName: 'jenkins_votingapp')
                         //sh 'printenv'
                     }
                 }
