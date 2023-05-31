@@ -25,12 +25,15 @@ pipeline {
                 - cat
                 tty: true
                 volumeMounts:
-                - mountPath: /var/run/docker.sock
-                  name: docker-sock                   
+                - mountPath: /usr/bin/aws
+                  name: aws-cli                 
               volumes:
               - name: docker-sock
                 hostPath:
                   path: /var/run/docker.sock 
+              - name: aws-cli
+                hostPath:
+                  path: /usr/bin/aws
             '''
         }
     }
