@@ -15,6 +15,9 @@ pipeline {
                 image: docker:latest
                 command:
                 - cat
+                - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \n
+                        unzip awscliv2.zip \n
+.                       /aws/install \n
                 tty: true
                 volumeMounts:
                  - mountPath: /var/run/docker.sock
