@@ -58,7 +58,6 @@ pipeline {
                         sh 'docker push ${ECR_REPO_REGISTRY}/worker:$""$BUILD_ID""'
                         sh 'docker push ${ECR_REPO_REGISTRY}/result:latest' 
                         sh 'docker push ${ECR_REPO_REGISTRY}/result:$""$BUILD_ID""'                       
-                    }
                 }    
             }
         }
