@@ -41,11 +41,22 @@ pipeline {
 
         stage ('Build') {
             steps {
-                container('docker') {
-                    sh 'docker build -t votingapp/vote:latest ./jenkins-votingapp/vote'
-                    sh 'docker build -t votingapp/result:latest ./jenkins-votingapp/result'
-                    sh 'docker build -t votingapp/worker:latest ./jenkins-votingapp/worker'
-                }
+                withEnv (['ECR_REPO_REGISTRY=762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp']){
+                    container('docker') {
+                        sh 'docker build -t ECR_REPO_REGISTRY/vote:latest ./jenkins-votingapp/vote'
+                        sh 'docker build -t ECR_REPO_REGISTRY/result:latest ./jenkins-votingapp/result'
+                        sh 'docker build -t ECR_REPO_REGISTRY/worker:latest ./jenkins-votingapp/worker'
+                        sh 'docker tag $ECR_REPO_REGISTRY/vote:latest $ECR_REPO_REGISTRY/vote:""$BUILD_ID""'
+                        sh 'docker tag $ECR_REPO_REGISTRY/result:latest $ECR_REPO_REGISTRY/result:""$BUILD_ID""'
+                        sh 'docker tag $ECR_REPO_REGISTRY/worker:latest $ECR_REPO_REGISTRY/worker:""$BUILD_ID""'
+                        sh 'docker push $ECR_REPO_REGISTRY/vote:latest' 
+                        sh 'docker push $ECR_REPO_REGISTRY/vote:$""$BUILD_ID""'
+                        sh 'docker push $ECR_REPO_REGISTRY/worker:latest' 
+                        sh 'docker push $ECR_REPO_REGISTRY/worker:$""$BUILD_ID""'
+                        sh 'docker push $ECR_REPO_REGISTRY/result:latest' 
+                        sh 'docker push $ECR_REPO_REGISTRY/result:$""$BUILD_ID""'                       
+                    }
+                }    
             }
         }
     }
