@@ -28,6 +28,7 @@ pipeline {
     }
     environment {
         ECR_REPO_REGISTRY = '762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp'
+        AWS_CLI_DISABLE_PAGER = 'true'
     }
     stages {
 
