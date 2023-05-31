@@ -38,7 +38,7 @@ pipeline {
         }
     }
     environment {
-        ECR_REPO_REGISTRY = '762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp'
+        ECR_REPO_REGISTRY = 'public.ecr.aws/u7n2x8y0/public_votingapp'
     }
     stages {
 
@@ -56,10 +56,9 @@ pipeline {
 
         stage ('Build') {
             steps {
-                withAwsCli(credentialsId='aws-instance-role', region='us-east-1'){
                     script {
                         container('docker') {
-                            sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 762247940679.dkr.ecr.us-east-1.amazonaws.com'
+                            sh 'docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/vote:latest ./jenkins-votingapp/vote'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/result:latest ./jenkins-votingapp/result'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/worker:latest ./jenkins-votingapp/worker'
@@ -73,8 +72,7 @@ pipeline {
                             sh 'docker push ${ECR_REPO_REGISTRY}/result:latest' 
                             sh 'docker push ${ECR_REPO_REGISTRY}/result:$""$BUILD_ID""'
                         }                       
-                    }
-                }    
+                    }   
             }
         }
         // stage ('Push') {
