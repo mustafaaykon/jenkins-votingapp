@@ -1,5 +1,31 @@
 pipeline {
-    agent any // burada kubernetes agenti kaldırmam gerekıyor.
+    agent {    
+        kubernetes {
+          yaml '''
+            apiVersion: v1
+            kind: Pod
+            spec:
+              containers:
+              - name: maven
+                image: maven:alpine
+                command:
+                - cat
+                tty: true
+              - name: docker
+                image: docker:latest
+                command:
+                - cat
+                tty: true
+                volumeMounts:
+                 - mountPath: /var/run/docker.sock
+                   name: docker-sock
+              volumes:
+              - name: docker-sock
+                hostPath:
+                  path: /var/run/docker.sock    
+            '''
+        }
+    } // burada kubernetes agenti kaldırmam gerekıyor.
     stages {
         // stage ('Login') {
         //     steps {
@@ -14,7 +40,7 @@ pipeline {
 
         stage ('Push ECR') {
             steps {
-                withEnv (['ECR_REPO_REGISTRY=test'])
+                withEnv (['ECR_REPO_REGISTRY=${env.ECR_REPO_REGISTRY}'])
                 {
                     // sh 'aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPO_REGISTRY'
                     sh 'docker build -t --platform=linux/amd64 ECR_REPO_REGISTRY/jenkins_votingapp_vote:latest ./vote'
