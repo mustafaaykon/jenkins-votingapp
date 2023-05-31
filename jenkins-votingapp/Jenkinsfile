@@ -30,7 +30,6 @@ pipeline {
             steps {
                 withAWS(region: 'us-east-1'){
                     script{
-                        sh "aws ecr get-login-password --region my_region | docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0"
                         def login = ecrLogin()
                         }
                     }
