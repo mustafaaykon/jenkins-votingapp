@@ -44,11 +44,7 @@ pipeline {
 
         stage ('Build') {
             steps {
-                withAWS(region: 'us-east-1'){
-                    script{
-                        def login = ecrLogin()
-                        def images = ecrListImages(repositoryName: 'jenkins_votingapp')
-                        }
+                    sh(label: 'ECR login and docker push', script: 'eval $(aws ecr get-login --region "$AWS_REGION" --no-include-email)')
                     container('docker') {
                         sh 'docker build -t ${ECR_REPO_REGISTRY}/vote:latest ./jenkins-votingapp/vote'
                         sh 'docker build -t ${ECR_REPO_REGISTRY}/result:latest ./jenkins-votingapp/result'
