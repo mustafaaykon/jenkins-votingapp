@@ -12,7 +12,7 @@ pipeline {
                 - cat
                 tty: true
               - name: docker
-                image: docker:latest
+                image: amazon/aws-cli:latest
                 command:
                 - cat
                 tty: true
