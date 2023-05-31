@@ -31,20 +31,24 @@ pipeline {
     }
     stages {
 
-        stage ('Login to ECR') {
+        // stage ('Login to ECR') {
+        //     steps {
+        //         withAWS(region: 'us-east-1'){
+        //             script{
+        //                 def login = ecrLogin()
+        //                 def images = ecrListImages(repositoryName: 'jenkins_votingapp')
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        stage ('Build') {
             steps {
                 withAWS(region: 'us-east-1'){
                     script{
                         def login = ecrLogin()
                         def images = ecrListImages(repositoryName: 'jenkins_votingapp')
                         }
-                    }
-                }
-            }
-
-        stage ('Build') {
-            steps {
-                withEnv (['ecr_repo_registry=762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp']){
                     container('docker') {
                         sh 'docker build -t ${ECR_REPO_REGISTRY}/vote:latest ./jenkins-votingapp/vote'
                         sh 'docker build -t ${ECR_REPO_REGISTRY}/result:latest ./jenkins-votingapp/result'
