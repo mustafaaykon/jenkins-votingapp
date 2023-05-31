@@ -47,7 +47,7 @@ pipeline {
             steps {
                 script {
                     container('docker') {
-                        sh 'docker login -u AWS -p password -e none https://762247940679.dkr.ecr.us-east-1.amazonaws.com'
+                        sh 'docker login --username AWS --password-stdin 762247940679.dkr.ecr.us-east-1.amazonaws.com'
                         sh 'docker build -t ${ECR_REPO_REGISTRY}/vote:latest ./jenkins-votingapp/vote'
                         sh 'docker build -t ${ECR_REPO_REGISTRY}/result:latest ./jenkins-votingapp/result'
                         sh 'docker build -t ${ECR_REPO_REGISTRY}/worker:latest ./jenkins-votingapp/worker'
