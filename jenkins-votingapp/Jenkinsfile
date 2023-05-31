@@ -27,6 +27,18 @@ pipeline {
         }
     }
     stages {
+
+        stage ('Login to ECR') {
+            steps {
+                withAWS(region: 'us-east-1'){
+                    script{
+                        def login = ecrLogin()
+                        def images = ecrListImages(repositoryName: 'jenkins_votingapp')
+                        }
+                    }
+                }
+            }
+
         stage ('Build') {
             steps {
                 container('docker') {
