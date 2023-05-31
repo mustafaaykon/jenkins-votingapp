@@ -30,7 +30,7 @@ pipeline {
         stage ('Build') {
             steps {
                 container('docker') {
-                    sh 'docker build -t test/testing-image:latest ./vote'
+                    sh 'docker build -f ./vote/Dockerfile -t test/testing-image:latest .'
                 }
             }
         }
