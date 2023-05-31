@@ -1,0 +1,62 @@
+pipeline {
+    agent {    
+        kubernetes {
+          yaml '''
+            apiVersion: v1
+            kind: Pod
+            spec:
+              containers:
+              - name: maven
+                image: maven:alpine
+                command:
+                - cat
+                tty: true
+              - name: docker
+                image: docker:latest
+                command:
+                - cat
+                tty: true
+                volumeMounts:
+                 - mountPath: /var/run/docker.sock
+                   name: docker-sock
+              volumes:
+              - name: docker-sock
+                hostPath:
+                  path: /var/run/docker.sock    
+            '''
+        }
+    } // burada kubernetes agenti kaldırmam gerekıyor.
+    stages {
+        // stage ('Login') {
+        //     steps {
+        //         withAWS(region: 'us-east-1', credentials: 'aws_access'){
+        //             script{
+        //                 def login = ecrLogin()
+        //                 }
+        //                 //sh 'printenv'
+        //             }
+        //         }
+        //     }
+
+        stage ('Push ECR') {
+            steps {
+                withEnv (['ECR_REPO_REGISTRY=${env.ECR_REPO_REGISTRY}'])
+                {
+                    sh 'aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REPO_REGISTRY'
+                    sh 'docker build -t --platform=linux/amd64 ECR_REPO_REGISTRY/jenkins_votingapp_vote:latest ./vote'
+                    sh 'docker build -t --platform=linux/amd64 ECR_REPO_REGISTRY/jenkins_votingapp_worker:latest ./worker'
+                    sh 'docker build -t --platform=linux/amd64 ECR_REPO_REGISTRY/jenkins_votingapp_result:latest ./result'
+                    sh 'docker tag $ECR_REPO_REGISTRY/jenkins_votingapp_vote:latest $ECR_REPO_REGISTRY/jenkins_votingapp_vote:""$BUILD_ID""'
+                    sh 'docker tag $ECR_REPO_REGISTRY/jenkins_votingapp_worker:latest $ECR_REPO_REGISTRY/jenkins_votingapp_worker:""$BUILD_ID""'
+                    sh 'docker tag $ECR_REPO_REGISTRY/jenkins_votingapp_result:latest $ECR_REPO_REGISTRY/jenkins_votingapp_result:""$BUILD_ID""'
+                    sh 'docker push $ECR_REPO_REGISTRY/jenkins_votingapp_vote:latest' 
+                    sh 'docker push $ECR_REPO_REGISTRY/jenkins_votingapp_vote:$""$BUILD_ID""'
+                    sh 'docker push $ECR_REPO_REGISTRY/jenkins_votingapp_worker:latest' 
+                    sh 'docker push $ECR_REPO_REGISTRY/jenkins_votingapp_worker:$""$BUILD_ID""'
+                    sh 'docker push $ECR_REPO_REGISTRY/jenkins_votingapp_result:latest' 
+                    sh 'docker push $ECR_REPO_REGISTRY/jenkins_votingapp_result:$""$BUILD_ID""'                    
+                }
+            }
+        }
+    }
+}
