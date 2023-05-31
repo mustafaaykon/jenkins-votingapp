@@ -19,15 +19,10 @@ pipeline {
                 volumeMounts:
                  - mountPath: /var/run/docker.sock
                    name: docker-sock
-                 - mountPath: /usr/bin/aws
-                   name: aws-cli
               volumes:
               - name: docker-sock
                 hostPath:
-                  path: /var/run/docker.sock
-              - name: aws-cli
-                hostPath:
-                  path: /usr/bin/aws    
+                  path: /var/run/docker.sock 
             '''
         }
     }
@@ -49,8 +44,11 @@ pipeline {
 
         stage ('Build') {
             steps {
+                withAWS(region: 'us-east-1') {
+                    script {
+                        def login = ecrLogin()
+                        }
                     container('docker') {
-                        sh 'eval $(aws ecr get-login --region "$AWS_REGION" --no-include-email)'
                         sh 'docker build -t ${ECR_REPO_REGISTRY}/vote:latest ./jenkins-votingapp/vote'
                         sh 'docker build -t ${ECR_REPO_REGISTRY}/result:latest ./jenkins-votingapp/result'
                         sh 'docker build -t ${ECR_REPO_REGISTRY}/worker:latest ./jenkins-votingapp/worker'
@@ -62,7 +60,8 @@ pipeline {
                         sh 'docker push ${ECR_REPO_REGISTRY}/worker:latest' 
                         sh 'docker push ${ECR_REPO_REGISTRY}/worker:$""$BUILD_ID""'
                         sh 'docker push ${ECR_REPO_REGISTRY}/result:latest' 
-                        sh 'docker push ${ECR_REPO_REGISTRY}/result:$""$BUILD_ID""'                       
+                        sh 'docker push ${ECR_REPO_REGISTRY}/result:$""$BUILD_ID""'
+                    }                       
                 }    
             }
         }
