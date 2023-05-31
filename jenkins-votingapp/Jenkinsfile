@@ -30,7 +30,9 @@ pipeline {
         stage ('Build') {
             steps {
                 container('docker') {
-                    sh 'docker build -t test/testing-image:latest ./jenkins-votingapp/vote'
+                    sh 'docker build -t votingapp/vote:latest ./jenkins-votingapp/vote'
+                    sh 'docker build -t votingapp/result:latest ./jenkins-votingapp/result'
+                    sh 'docker build -t votingapp/worker:latest ./jenkins-votingapp/worker'
                 }
             }
         }
