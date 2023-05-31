@@ -12,13 +12,15 @@ pipeline {
                 - cat
                 tty: true
               - name: docker
-                image: binlab/jenkins-agent:latest
+                image: docker:latest
                 command:
                 - cat
                 tty: true
                 volumeMounts:
                  - mountPath: /var/run/docker.sock
                    name: docker-sock
+                 - mountPath: /usr/bin/aws
+                   name: aws-cli
               volumes:
               - name: docker-sock
                 hostPath:
