@@ -30,7 +30,18 @@ pipeline {
         ECR_REPO_REGISTRY = '762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp'
     }
     stages {
-
+        stage ('Authenticate ECR') {
+            steps {
+                script {
+                    withAWS(region: 'us-east-1') {
+                        def ecrAuth = awsEcrLogin()
+                        docker.withRegistry(ecrAuth.registryUrl, ecrAuth.credentials) {
+                            sh 'docker info'
+                        }
+                    }
+                }
+            }
+        }
         // stage ('Login to ECR') {
         //     steps {
         //         withAWS(region: 'us-east-1'){
