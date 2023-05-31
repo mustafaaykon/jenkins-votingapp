@@ -12,7 +12,7 @@ pipeline {
                 - cat
                 tty: true
               - name: docker
-                image: amazon/aws-cli:latest
+                image: binlab/jenkins-agent:latest
                 command:
                 - cat
                 tty: true
