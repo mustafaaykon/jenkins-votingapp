@@ -6,11 +6,6 @@ pipeline {
             kind: Pod
             spec:
               containers:
-              - name: maven
-                image: maven:alpine
-                command:
-                - cat
-                tty: true
               - name: docker
                 image: docker:latest
                 command:
@@ -18,22 +13,12 @@ pipeline {
                 tty: true
                 volumeMounts:
                  - mountPath: /var/run/docker.sock
-                   name: docker-sock
-              - name: awscli
-                image: amazon/aws-cli:latest
-                command:
-                - cat
-                tty: true
-                volumeMounts:
-                - mountPath: /usr/bin/aws
-                  name: aws-cli                 
+                   name: docker-sock              
               volumes:
               - name: docker-sock
                 hostPath:
                   path: /var/run/docker.sock 
-              - name: aws-cli
-                hostPath:
-                  path: /usr/bin/aws
+
             '''
         }
     }
@@ -41,24 +26,22 @@ pipeline {
         ECR_REPO_REGISTRY = 'public.ecr.aws/u7n2x8y0/public_votingapp'
     }
     stages {
-
-        // stage ('Login to ECR') {
-        //     steps {
-        //         withAWS(region: 'us-east-1'){
-        //             script{
-        //                 def login = ecrLogin()
-        //                 def images = ecrListImages(repositoryName: 'jenkins_votingapp')
-        //                 }
-        //             }
-        //         }
-        //     }
+        stage ('Login to ECR') {
+            steps {
+                withAWS(region: 'us-east-1'){
+                    script{
+                        sh "aws ecr get-login-password --region my_region | docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0"
+                        def login = ecrLogin()
+                        }
+                    }
+                }
+            }
 
 
         stage ('Build') {
             steps {
                     script {
                         container('docker') {
-                            sh 'docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/vote:latest ./jenkins-votingapp/vote'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/result:latest ./jenkins-votingapp/result'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/worker:latest ./jenkins-votingapp/worker'
