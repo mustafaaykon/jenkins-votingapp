@@ -65,9 +65,11 @@ pipeline {
         }
         stage ('Push') {
             steps {
-                docker.withRegistry('https://762247940679.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1')
-                docker.push('${ECR_REPO_REGISTRY}/vote:latest')
-                docker.push('${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""')
+                script {
+                        docker.withRegistry('https://762247940679.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1')
+                    docker.push('${ECR_REPO_REGISTRY}/vote:latest')
+                    docker.push('${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""')
+                }
             }
         }
     }
