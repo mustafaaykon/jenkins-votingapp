@@ -15,7 +15,7 @@ pipeline {
                  - mountPath: /var/run/docker.sock
                    name: docker-sock
               - name: awscli
-                image: amazon/aws-cli:latest
+                image: mustafaaykon/jenkins_awscli_dockercli:latest
                 command:
                 - cat
                 tty: true
