@@ -22,7 +22,7 @@ pipeline {
                 tty: true
 
               - name: snyk-docker
-                image: snyk/snyk-cli:docker
+                image: snyk/snyk:docker
                 command:
                 - /bin/cat
                 tty: true
@@ -73,12 +73,7 @@ pipeline {
                             sh """
                                 docker build -t jenkins_votingapp_vote ./jenkins-votingapp/vote
                                 snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
-                                snyk test --json \
-                                --docker jenkins_votingapp_vote:latest \
-                                --file=jenkins-votingapp/vote/Dockerfile \
-                                --severity-threshold=critical \
-                                --org=mustafa.aykon \
-                                --project-name=mustafaaykon/jenkins-votingapp
+                                snyk container test jenkins_votingapp_vote:latest --file=jenkins-votingapp/vote/Dockerfile --severity-threshold=critical --org=mustafa.aykon --project-name=mustafaaykon/jenkins-votingapp
                             """
                                 }
                             }
