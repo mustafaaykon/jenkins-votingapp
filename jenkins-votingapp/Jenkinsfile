@@ -22,7 +22,7 @@ pipeline {
                 tty: true
 
               - name: snyk-docker
-                image: snyk/snyk-cli:docker
+                image: snyk/snyk:docker
                 command:
                 - /bin/cat
                 tty: true
