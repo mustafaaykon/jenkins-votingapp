@@ -14,16 +14,8 @@ pipeline {
                 volumeMounts:
                  - mountPath: /var/run/docker.sock
                    name: docker-sock
-              - name: awscli
-                image: jansauer/dockercli-plus-awscli
-                command:
-                - cat
-                tty: true
-                volumeMounts:
-                - mountPath: /usr/bin/aws
-                  name: aws-cli
-                - mountPath: /var/run/docker.sock
-                  name: docker-sock                                   
+                 - mountPath: /usr/bin/aws
+                   name: aws-cli                                                  
               volumes:
               - name: docker-sock
                 hostPath:
@@ -53,7 +45,7 @@ pipeline {
         stage ('Build') {
             steps {
                     script {
-                        container('awscli') {
+                        container('docker') {
                             sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 762247940679.dkr.ecr.us-east-1.amazonaws.com'
                         }
                         container('docker') {
