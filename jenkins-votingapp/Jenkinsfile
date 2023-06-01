@@ -7,7 +7,7 @@ pipeline {
             spec:
               containers:
               - name: docker
-                image: binlab/jenkins-agent:latest
+                image: docker:latest
                 command:
                 - cat
                 tty: true
@@ -36,7 +36,7 @@ pipeline {
         }
     }
     environment {
-        ECR_REPO_REGISTRY = 'public.ecr.aws/u7n2x8y0/public_votingapp'
+        ECR_REPO_REGISTRY = '<my_ecr_repo_registry>'
     }
     stages {
         // stage ('Login to ECR') {
@@ -62,25 +62,25 @@ pipeline {
                             sh 'docker tag ${ECR_REPO_REGISTRY}/vote:latest ${ECR_REPO_REGISTRY}/vote:""$BUILD_ID""'
                             sh 'docker tag ${ECR_REPO_REGISTRY}/result:latest ${ECR_REPO_REGISTRY}/result:""$BUILD_ID""'
                             sh 'docker tag ${ECR_REPO_REGISTRY}/worker:latest ${ECR_REPO_REGISTRY}/worker:""$BUILD_ID""'
-                            sh 'docker push ${ECR_REPO_REGISTRY}/vote:latest' 
-                            sh 'docker push ${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""'
-                            sh 'docker push ${ECR_REPO_REGISTRY}/worker:latest' 
-                            sh 'docker push ${ECR_REPO_REGISTRY}/worker:$""$BUILD_ID""'
-                            sh 'docker push ${ECR_REPO_REGISTRY}/result:latest' 
-                            sh 'docker push ${ECR_REPO_REGISTRY}/result:$""$BUILD_ID""'
+                            // sh 'docker push ${ECR_REPO_REGISTRY}/vote:latest' 
+                            // sh 'docker push ${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""'
+                            // sh 'docker push ${ECR_REPO_REGISTRY}/worker:latest' 
+                            // sh 'docker push ${ECR_REPO_REGISTRY}/worker:$""$BUILD_ID""'
+                            // sh 'docker push ${ECR_REPO_REGISTRY}/result:latest' 
+                            // sh 'docker push ${ECR_REPO_REGISTRY}/result:$""$BUILD_ID""'
                         }                       
                 }       
             }
         }
-        // stage ('Push') {
-        //     steps {
-        //         script {
-        //                 docker.withRegistry('https://762247940679.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-instance-role') {
-        //             docker.image('${ECR_REPO_REGISTRY}/vote:latest').push()
-        //             docker.image('${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""').push()
-        //                 }
-        //         }
-        //     }
-        // }
+        stage ('Push') {
+            steps {
+                script {
+                        docker.withRegistry('https://762247940679.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-instance-role') {
+                    docker.image('${ECR_REPO_REGISTRY}/vote:latest').push()
+                    docker.image('${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""').push()
+                        }
+                }
+            }
+        }
     }
 }
