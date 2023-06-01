@@ -14,11 +14,22 @@ pipeline {
                 volumeMounts:
                  - mountPath: /var/run/docker.sock
                    name: docker-sock
+
               - name: snyk-python
                 image: snyk/snyk-cli:python-3
                 command:
                 - /bin/cat
-                tty: true             
+                tty: true
+
+              - name: snyk-docker
+                image: snyk/snyk-cli:docker
+                command:
+                - /bin/cat
+                tty: true
+                env:
+                - name: DOCKER_HOST
+                value: tcp://localhost:2375
+
               volumes:
               - name: docker-sock
                 hostPath:
@@ -42,6 +53,7 @@ pipeline {
                         steps {
                             container('snyk-python') {
                                 sh """
+                                    pip install -r requirements.txt
                                     snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
                                     snyk test --json \
                                     --file=requirements.txt \
