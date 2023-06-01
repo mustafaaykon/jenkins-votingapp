@@ -46,40 +46,40 @@ pipeline {
     }
     stages {
         
-        stage ('Synk Scan') {
-            failFast true
-            // environment {
-            //     SYNK_TOKEN = 'f1ab0cbe-cf59-4834-9429-a0b4057e2e4a'
-            // }
-                  parallel {
-                    stage('dependency scan') {
-                        steps {
-                            container('snyk-python') {
-                                sh """
-                                    pip install -r jenkins-votingapp/vote/requirements.txt
-                                    snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
-                                    snyk test --json \
-                                    --file=jenkins-votingapp/vote/requirements.txt \
-                                    --severity-threshold=critical \
-                                    --org=mustafa.aykon \
-                                    --project-name=mustafaaykon/jenkins-votingapp
-                                """
-                                }
-                        }
-                    }
-                    stage('docker scan') {
-                        steps {
-                            container('snyk-docker') {
-                            sh """
-                                docker build -t jenkins_votingapp_vote ./jenkins-votingapp/vote
-                                snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
-                                snyk container test jenkins_votingapp_vote:latest --file=jenkins-votingapp/vote/Dockerfile --severity-threshold=critical --org=mustafa.aykon --project-name=mustafaaykon/jenkins-votingapp
-                            """
-                                }
-                            }
-                        }
-                    }
-            }   
+        // stage ('Synk Scan') {
+        //     failFast true
+        //     // environment {
+        //     //     SYNK_TOKEN = 'f1ab0cbe-cf59-4834-9429-a0b4057e2e4a'
+        //     // }
+        //           parallel {
+        //             stage('dependency scan') {
+        //                 steps {
+        //                     container('snyk-python') {
+        //                         sh """
+        //                             pip install -r jenkins-votingapp/vote/requirements.txt
+        //                             snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
+        //                             snyk test --json \
+        //                             --file=jenkins-votingapp/vote/requirements.txt \
+        //                             --severity-threshold=critical \
+        //                             --org=mustafa.aykon \
+        //                             --project-name=mustafaaykon/jenkins-votingapp
+        //                         """
+        //                         }
+        //                 }
+        //             }
+        //             stage('docker scan') {
+        //                 steps {
+        //                     container('snyk-docker') {
+        //                     sh """
+        //                         docker build -t jenkins_votingapp_vote ./jenkins-votingapp/vote
+        //                         snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
+        //                         snyk container test jenkins_votingapp_vote:latest --file=jenkins-votingapp/vote/Dockerfile --severity-threshold=critical --org=mustafa.aykon --project-name=mustafaaykon/jenkins-votingapp
+        //                     """
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //     }   
 
         stage ('Install & Login') {
             steps {
@@ -108,10 +108,6 @@ pipeline {
                             sh 'docker build -t 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_vote ./jenkins-votingapp/vote'
                             sh 'docker build -t 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_result ./jenkins-votingapp/result'
                             sh 'docker build -t 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_worker ./jenkins-votingapp/worker'
-
-                            sh 'docker tag 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_vote:latest 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_vote:""$BUILD_ID""'
-                            sh 'docker tag 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_result:latest 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_result:""$BUILD_ID""'
-                            sh 'docker tag 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_worker:latest 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_worker:""$BUILD_ID""'
                                                     
                         }                       
                 }       
@@ -123,6 +119,9 @@ pipeline {
                 script {
                     container('docker') {
 
+                            sh 'docker tag 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_vote:latest 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_vote:""$BUILD_ID""'
+                            sh 'docker tag 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_result:latest 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_result:""$BUILD_ID""'
+                            sh 'docker tag 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_worker:latest 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_worker:""$BUILD_ID""'
                             sh 'docker push 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_vote:latest'
                             sh 'docker push 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_vote:""$BUILD_ID""'
                             sh 'docker push 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_result:latest'
@@ -133,6 +132,19 @@ pipeline {
                     }
                 }
             }
+        
+        stage ('Deploy to Kubernetes') {
+            steps {
+                script {
+                    kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/db-deployment.yaml", "db-service.yaml")
+                    kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/db-deployment.yaml", "db-service.yaml")
+                    kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/redis-deployment.yaml", "redis-service.yaml")
+                    kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/result-deployment.yaml", "result-service.yaml")
+                    kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/vote-deployment.yaml", "vote-service.yaml")
+                    kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/worker-deployment.yaml")
+                }
+            }
+        }
 
     }    
 }

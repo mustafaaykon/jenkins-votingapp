@@ -15,7 +15,7 @@ spec:
         app: result
     spec:
       containers:
-      - image: dockersamples/examplevotingapp_result
+      - image: 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_result:latest
         name: result
         ports:
         - containerPort: 80
