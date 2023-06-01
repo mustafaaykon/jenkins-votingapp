@@ -34,9 +34,9 @@ pipeline {
         
         stage ('Synk Scan') {
             failFast true
-            environment {
-                // SYNK_TOKEN = 'f1ab0cbe-cf59-4834-9429-a0b4057e2e4a'
-            }
+            // environment {
+            //     SYNK_TOKEN = 'f1ab0cbe-cf59-4834-9429-a0b4057e2e4a'
+            // }
                   parallel {
                     stage('dependency scan') {
                         steps {
