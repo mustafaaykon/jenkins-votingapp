@@ -80,6 +80,7 @@ pipeline {
                         docker.image('${ECR_REPO_REGISTRY}/vote:latest').push()
                         docker.image('${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""').push()
                             }
+                    }
                 }
             }
         }
