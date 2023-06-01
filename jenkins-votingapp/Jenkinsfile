@@ -60,7 +60,7 @@ pipeline {
             }
         }
 
-        stage ('Push to ECR')
+        stage ('Push to ECR') {
             steps {
                 script {
                     container('docker') {
@@ -74,17 +74,6 @@ pipeline {
                     }
                 }
             }
-    //     stage ('Push') {
-    //         steps {
-    //             script {
-    //                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-instance-role']]) {
-    //                         docker.withRegistry('https://""${ECR_REPO_REGISTRY}"', 'ecr') {
-    //                     docker.image('${ECR_REPO_REGISTRY}/vote:latest').push()
-    //                     docker.image('${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""').push()
-    //                         }
-    //             }
-    //         }
-    //     }
-    // }
+        }
     } 
 }
