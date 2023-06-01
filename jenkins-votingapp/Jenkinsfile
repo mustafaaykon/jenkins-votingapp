@@ -94,7 +94,6 @@ pipeline {
                                 && pip3 install --upgrade pip \
                                 && pip3 install --no-cache-dir \
                                 awscli \
-                                && npm install -g snyk \
                                 && rm -rf /var/cache/apk/*'
                             sh 'aws --version'
                             sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 762247940679.dkr.ecr.us-east-1.amazonaws.com"
