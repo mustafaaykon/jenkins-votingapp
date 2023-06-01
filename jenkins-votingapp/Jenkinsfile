@@ -53,9 +53,9 @@ pipeline {
 
         stage ('Build') {
             steps {
-                withAWS(region: 'us-east-1'){
                     script {
                         container('docker') {
+                            sh "aws ecr get-login-password --region my_region | docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0"
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/vote:latest ./jenkins-votingapp/vote'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/result:latest ./jenkins-votingapp/result'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/worker:latest ./jenkins-votingapp/worker'
@@ -69,7 +69,6 @@ pipeline {
                             sh 'docker push ${ECR_REPO_REGISTRY}/result:latest' 
                             sh 'docker push ${ECR_REPO_REGISTRY}/result:$""$BUILD_ID""'
                         }                       
-                    }
                 }       
             }
         }
