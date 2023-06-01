@@ -13,24 +13,11 @@ pipeline {
                 tty: true
                 volumeMounts:
                  - mountPath: /var/run/docker.sock
-                   name: docker-sock
-              - name: awscli
-                image: amazon/aws-cli:latest
-                command:
-                - cat
-                tty: true
-                volumeMounts:
-                - mountPath: /var/run/docker.sock
-                  name: docker-sock
-                - mountPath: /usr/bin/aws
-                  name: aws-cli                
+                   name: docker-sock             
               volumes:
               - name: docker-sock
                 hostPath:
                   path: /var/run/docker.sock
-              - name: aws-cli
-                hostPath:
-                  path: /usr/bin/aws 
 
             '''
         }
@@ -41,21 +28,33 @@ pipeline {
     stages {
         // stage ('Login to ECR') {
         //     steps {
-        //         withAWS(region: 'us-east-1'){
         //             script{
-        //                 sh "aws ecr get-login-password --region my_region | docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0"
-        //                 def login = ecrLogin()
+        //                 sh 'apk add --no-cache \
+        //                     python3 \
+        //                     py3-pip \
+        //                     && pip3 install --upgrade pip \
+        //                     && pip3 install --no-cache-dir \
+        //                     awscli \
+        //                     && rm -rf /var/cache/apk/*'
+        //                 sh 'aws --version'       
         //                 }
-        //             }
         //         }
         //     }
-
 
         stage ('Build') {
             steps {
                     script {
                         container('docker') {
-                            //sh "aws ecr get-login-password --region my_region | docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0"
+                            sh 'apk add --no-cache \
+                                python3 \
+                                py3-pip \
+                                && pip3 install --upgrade pip \
+                                && pip3 install --no-cache-dir \
+                                awscli \
+                                && rm -rf /var/cache/apk/*'
+                            sh 'aws --version'                               
+
+                            sh "aws ecr get-login-password --region my_region | docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0"
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/vote:latest ./jenkins-votingapp/vote'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/result:latest ./jenkins-votingapp/result'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/worker:latest ./jenkins-votingapp/worker'
@@ -72,17 +71,16 @@ pipeline {
                 }       
             }
         }
-        stage ('Push') {
-            steps {
-                script {
-                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding']]) {
-                            docker.withRegistry('https://762247940679.dkr.ecr.us-east-1.amazonaws.com', 'ecr') {
-                        docker.image('${ECR_REPO_REGISTRY}/vote:latest').push()
-                        docker.image('${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""').push()
-                            }
-                    }
-                }
-            }
-        }
-    }
+    //     stage ('Push') {
+    //         steps {
+    //             script {
+    //                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-instance-role']]) {
+    //                         docker.withRegistry('https://762247940679.dkr.ecr.us-east-1.amazonaws.com', 'ecr') {
+    //                     docker.image('${ECR_REPO_REGISTRY}/vote:latest').push()
+    //                     docker.image('${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""').push()
+    //                         }
+    //             }
+    //         }
+    //     }
+    // }
 }
