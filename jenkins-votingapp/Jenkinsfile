@@ -55,9 +55,9 @@ pipeline {
                             sh 'aws --version'                               
 
                             sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 762247940679.dkr.ecr.us-east-1.amazonaws.com"
-                            sh 'docker build -t jenkins_votingapp ./jenkins-votingapp/vote'
-                            sh 'docker tag jenkins_votingapp:latest 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp:latest'
-                            sh 'docker push 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp:latest'
+                            sh 'docker build -t jenkins_votingapp/vote ./jenkins-votingapp/vote'
+                            sh 'docker tag jenkins_votingapp/vote:latest 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp/vote:latest'
+                            sh 'docker push 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp/vote:latest'
                         }                       
                 }       
             }
