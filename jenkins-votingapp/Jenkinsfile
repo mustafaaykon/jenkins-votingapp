@@ -44,6 +44,7 @@ pipeline {
                                 sh """
                                     snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
                                     snyk test --json \
+                                    --file=requirements.txt \
                                     --severity-threshold=high \
                                     --org=cvega \
                                     --project-name=jenkins-votingapp/vote/requirements.txt
