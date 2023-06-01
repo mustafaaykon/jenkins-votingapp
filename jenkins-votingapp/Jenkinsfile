@@ -53,6 +53,7 @@ pipeline {
                                 }
                         }
                     }
+                }
         }
         
         stage ('Install & Login') {
