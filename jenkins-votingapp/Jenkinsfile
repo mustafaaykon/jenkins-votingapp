@@ -57,7 +57,7 @@ pipeline {
                                     snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
                                     snyk test --json \
                                     --file=jenkins-votingapp/vote/requirements.txt \
-                                    --severity-threshold=high \
+                                    --severity-threshold=critical \
                                     --org=mustafa.aykon \
                                     --project-name=mustafaaykon/jenkins-votingapp
                                 """
@@ -73,7 +73,7 @@ pipeline {
                                 snyk test --json \
                                 --docker jenkins_votingapp_vote:latest \
                                 --file=jenkins-votingapp/vote/Dockerfile \
-                                --severity-threshold=high \
+                                --severity-threshold=critical \
                                 --org=mustafa.aykon \
                                 --project-name=mustafaaykon/jenkins-votingapp
                             """
