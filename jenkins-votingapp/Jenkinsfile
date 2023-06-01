@@ -26,6 +26,9 @@ pipeline {
                 command:
                 - /bin/cat
                 tty: true
+                env:
+                - name: DOCKER_SCAN_SUGGEST
+                  value: false
                 volumeMounts:
                  - mountPath: /var/run/docker.sock
                    name: docker-sock
