@@ -36,7 +36,7 @@ pipeline {
         }
     }
     environment {
-        ECR_REPO_REGISTRY = '<my_ecr_repo_registry>'
+        ECR_REPO_REGISTRY = '762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp'
     }
     stages {
         // stage ('Login to ECR') {
