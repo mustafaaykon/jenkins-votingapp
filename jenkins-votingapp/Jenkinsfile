@@ -14,15 +14,19 @@ pipeline {
                 volumeMounts:
                  - mountPath: /var/run/docker.sock
                    name: docker-sock
-                 - mountPath: /usr/bin/aws
-                   name: aws-cli                                                  
+              - name: awscli
+                image: amazon/aws-cli:latest
+                command:
+                - cat
+                tty: true
+                volumeMounts:
+                - mountPath: /var/run/docker.sock
+                  name: docker-sock                
               volumes:
               - name: docker-sock
                 hostPath:
                   path: /var/run/docker.sock 
-              - name: aws-cli
-                hostPath:
-                  path: /usr/bin/aws
+
             '''
         }
     }
@@ -45,8 +49,8 @@ pipeline {
         stage ('Build') {
             steps {
                     script {
-                        container('docker') {
-                            sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 762247940679.dkr.ecr.us-east-1.amazonaws.com'
+                        container('awscli') {
+                            sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0'
                         }
                         container('docker') {
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/vote:latest ./jenkins-votingapp/vote'
