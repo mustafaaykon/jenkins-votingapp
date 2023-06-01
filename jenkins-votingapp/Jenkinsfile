@@ -75,10 +75,11 @@ pipeline {
         stage ('Push') {
             steps {
                 script {
-                        docker.withRegistry('https://762247940679.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:aws-instance-role') {
-                    docker.image('${ECR_REPO_REGISTRY}/vote:latest').push()
-                    docker.image('${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""').push()
-                        }
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-instance-role']]) {
+                            docker.withRegistry('https://762247940679.dkr.ecr.us-east-1.amazonaws.com', 'ecr') {
+                        docker.image('${ECR_REPO_REGISTRY}/vote:latest').push()
+                        docker.image('${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""').push()
+                            }
                 }
             }
         }
