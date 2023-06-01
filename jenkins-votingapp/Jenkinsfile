@@ -56,7 +56,7 @@ pipeline {
                 withAWS(region: 'us-east-1'){
                     script {
                             def login = ecrLogin()
-                            // sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0'
+                            sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0'
                         container('docker') {
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/vote:latest ./jenkins-votingapp/vote'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/result:latest ./jenkins-votingapp/result'
