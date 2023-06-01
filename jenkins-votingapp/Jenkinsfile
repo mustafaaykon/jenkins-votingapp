@@ -104,9 +104,10 @@ pipeline {
                             sh 'docker push 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_result:""$BUILD_ID""'
                             sh 'docker push 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_worker:latest'
                             sh 'docker push 762247940679.dkr.ecr.us-east-1.amazonaws.com/jenkins_votingapp_worker:""$BUILD_ID""' 
+                        }
                     }
                 }
             }
-        }
-    } 
+        }    
+    }
 }
