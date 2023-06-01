@@ -53,6 +53,7 @@ pipeline {
                         steps {
                             container('snyk-python') {
                                 sh """
+                                    pip install -r jenkins-votingapp/vote/requirements.txt
                                     snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
                                     snyk test --json \
                                     --file=jenkins-votingapp/vote/requirements.txt \
@@ -67,11 +68,11 @@ pipeline {
                         steps {
                             container('snyk-docker') {
                             sh """
-                                docker build -t jenkins-votingapp/vote ./jenkins-votingapp/vote
+                                docker build -t jenkins_votingapp_vote ./jenkins-votingapp/vote
                                 snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
                                 snyk test --json \
-                                --docker jenkins-votingapp/vote:latest \
-                                --file=Dockerfile \
+                                --docker jenkins_votingapp_vote:latest \
+                                --file=jenkins-votingapp/vote/Dockerfile \
                                 --severity-threshold=high \
                                 --org=cvega \
                                 --project-name=mustafaaykon/jenkins-votingapp
