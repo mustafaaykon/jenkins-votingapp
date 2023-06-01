@@ -55,14 +55,14 @@ pipeline {
                             sh 'aws --version'                               
 
                             sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 762247940679.dkr.ecr.us-east-1.amazonaws.com"
-                            sh 'docker build -t jenkins_votingapp/vote:latest ./jenkins-votingapp/vote'
+                            sh 'docker build -t jenkins_votingapp ./jenkins-votingapp/vote'
                             //sh 'docker build -t ${ECR_REPO_REGISTRY}/result:latest ./jenkins-votingapp/result'
                             //sh 'docker build -t ${ECR_REPO_REGISTRY}/worker:latest ./jenkins-votingapp/worker'
-                            sh 'docker tag jenkins_votingapp/vote:latest ${ECR_REPO_REGISTRY}/vote:""$BUILD_ID""'
+                            sh 'docker tag jenkins_votingapp:latest ${ECR_REPO_REGISTRY}:""$BUILD_ID""'
                             //sh 'docker tag ${ECR_REPO_REGISTRY}/result:latest ${ECR_REPO_REGISTRY}/result:""$BUILD_ID""'
                             //sh 'docker tag ${ECR_REPO_REGISTRY}/worker:latest ${ECR_REPO_REGISTRY}/worker:""$BUILD_ID""'
-                            sh 'docker push jenkins_votingapp/vote:latest' 
-                            sh 'docker push ${ECR_REPO_REGISTRY}/vote:$""$BUILD_ID""'
+                            sh 'docker push jenkins_votingapp:latest' 
+                            sh 'docker push ${ECR_REPO_REGISTRY}:$""$BUILD_ID""'
                             //sh 'docker push ${ECR_REPO_REGISTRY}/worker:latest' 
                             //sh 'docker push ${ECR_REPO_REGISTRY}/worker:$""$BUILD_ID""'
                             //sh 'docker push ${ECR_REPO_REGISTRY}/result:latest' 
