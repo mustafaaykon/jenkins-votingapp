@@ -58,7 +58,7 @@ pipeline {
                                     snyk test --json \
                                     --file=jenkins-votingapp/vote/requirements.txt \
                                     --severity-threshold=high \
-                                    --org=cvega \
+                                    --org=mustafa.aykon \
                                     --project-name=mustafaaykon/jenkins-votingapp
                                 """
                                 }
@@ -74,7 +74,7 @@ pipeline {
                                 --docker jenkins_votingapp_vote:latest \
                                 --file=jenkins-votingapp/vote/Dockerfile \
                                 --severity-threshold=high \
-                                --org=cvega \
+                                --org=mustafa.aykon \
                                 --project-name=mustafaaykon/jenkins-votingapp
                             """
                                 }
