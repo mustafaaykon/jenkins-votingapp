@@ -49,10 +49,8 @@ pipeline {
         stage ('Build') {
             steps {
                     script {
-                        container('awscli') {
-                            sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0'
-                        }
                         container('docker') {
+                            sh 'docker login --username AWS --password-stdin public.ecr.aws/u7n2x8y0 < ~/.aws/ecr-login-password'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/vote:latest ./jenkins-votingapp/vote'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/result:latest ./jenkins-votingapp/result'
                             sh 'docker build -t ${ECR_REPO_REGISTRY}/worker:latest ./jenkins-votingapp/worker'
