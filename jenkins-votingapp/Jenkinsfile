@@ -55,7 +55,7 @@ pipeline {
                     }
                 }
         }
-        
+
         stage ('Install & Login') {
             steps {
                 script {
@@ -109,6 +109,6 @@ pipeline {
                     }
                 }
             }
-        }    
-    }
+            
+    }    
 }
