@@ -156,6 +156,7 @@ pipeline {
                     sh './kubectl apply -f jenkins-votingapp/k8s-specifications/vote-deployment.yaml'
                     sh './kubectl apply -f jenkins-votingapp/k8s-specifications/vote-service.yaml'
                     sh './kubectl apply -f jenkins-votingapp/k8s-specifications/worker-deployment.yaml'
+                    sh 'echo kubernetes deployments applied successfully...'
                     }
             }
         }
