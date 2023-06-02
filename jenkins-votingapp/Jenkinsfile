@@ -149,10 +149,11 @@ pipeline {
                         sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'  
                         sh 'chmod u+x ./kubectl'  
                         sh './kubectl get pods'
+                        sh 'ECR_PASSWORD=$(aws ecr get-login-password)'
                         sh './kubectl create secret docker-registry ecr_secret \
                             --docker-server=762247940679.dkr.ecr.us-east-1.amazonaws.com \
                             --docker-username=AWS \
-                            --docker-password=$(aws ecr get-login-password --password-stdin) \
+                            --docker-password=${ECR_PASSWORD} \
                             --namespace=jenkins'                                    
                         sh './kubectl apply -f jenkins-votingapp/k8s-specifications/db-deployment.yaml'
                         sh './kubectl apply -f jenkins-votingapp/k8s-specifications/db-service.yaml'
