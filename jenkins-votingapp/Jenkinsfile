@@ -143,8 +143,10 @@ pipeline {
         
         stage ('Deploy to Kubernetes') {
             steps {
-                withKubeConfig() {      
-                    container('docker') {
+                withKubeConfig() {
+                    sh  'curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+                        && unzip awscliv2.zip \
+                        && ./aws/install'                    
                     sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'  
                     sh 'chmod u+x ./kubectl'  
                     sh './kubectl get pods'
@@ -158,7 +160,6 @@ pipeline {
                     sh './kubectl apply -f jenkins-votingapp/k8s-specifications/vote-service.yaml'
                     sh './kubectl apply -f jenkins-votingapp/k8s-specifications/worker-deployment.yaml'
                     sh 'echo kubernetes deployments applied successfully...'
-                    }           
                     }
             }
         }
