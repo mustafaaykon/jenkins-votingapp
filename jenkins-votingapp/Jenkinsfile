@@ -143,17 +143,8 @@ pipeline {
         
         stage ('Deploy to Kubernetes') {
             steps {
-                withKubeConfig() {
-                    sh 'apk add --no-cache \
-                        npm \
-                        python3 \
-                        py3-pip \
-                        && pip3 install --upgrade pip \
-                        && pip3 install --no-cache-dir \
-                        awscli \
-                        && rm -rf /var/cache/apk/*'
-                    sh 'aws --version'
-                    sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 762247940679.dkr.ecr.us-east-1.amazonaws.com"                    
+                withKubeConfig() {      
+                    container('docker') {
                     sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'  
                     sh 'chmod u+x ./kubectl'  
                     sh './kubectl get pods'
@@ -167,6 +158,7 @@ pipeline {
                     sh './kubectl apply -f jenkins-votingapp/k8s-specifications/vote-service.yaml'
                     sh './kubectl apply -f jenkins-votingapp/k8s-specifications/worker-deployment.yaml'
                     sh 'echo kubernetes deployments applied successfully...'
+                    }           
                     }
             }
         }
