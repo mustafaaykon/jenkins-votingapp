@@ -153,7 +153,7 @@ pipeline {
                             --docker-server=762247940679.dkr.ecr.us-east-1.amazonaws.com \
                             --docker-username=AWS \
                             --docker-password=$(aws ecr get-login-password --region us-east-1) \
-                            --namespace=jenkins'                                    
+                            --namespace=jenkins --dry-run=client -o yaml | kubectl apply -f -'                                    
                         sh './kubectl apply -f jenkins-votingapp/k8s-specifications/db-deployment.yaml'
                         sh './kubectl apply -f jenkins-votingapp/k8s-specifications/db-service.yaml'
                         sh './kubectl apply -f jenkins-votingapp/k8s-specifications/redis-deployment.yaml'
