@@ -54,40 +54,40 @@ pipeline {
     }
     stages {
         
-        // stage ('Synk Scan') {
-        //     failFast true
-        //     // environment {
-        //     //     SYNK_TOKEN = 'f1ab0cbe-cf59-4834-9429-a0b4057e2e4a'
-        //     // }
-        //           parallel {
-        //             stage('dependency scan') {
-        //                 steps {
-        //                     container('snyk-python') {
-        //                         sh """
-        //                             pip install -r jenkins-votingapp/vote/requirements.txt
-        //                             snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
-        //                             snyk test --json \
-        //                             --file=jenkins-votingapp/vote/requirements.txt \
-        //                             --severity-threshold=critical \
-        //                             --org=mustafa.aykon \
-        //                             --project-name=mustafaaykon/jenkins-votingapp
-        //                         """
-        //                         }
-        //                 }
-        //             }
-        //             stage('docker scan') {
-        //                 steps {
-        //                     container('snyk-docker') {
-        //                     sh """
-        //                         docker build -t jenkins_votingapp_vote ./jenkins-votingapp/vote
-        //                         snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
-        //                         snyk container test jenkins_votingapp_vote:latest --file=jenkins-votingapp/vote/Dockerfile --severity-threshold=critical --org=mustafa.aykon --project-name=mustafaaykon/jenkins-votingapp
-        //                     """
-        //                         }
-        //                     }
-        //                 }
-        //             }
-        //     }   
+        stage ('Synk Scan') {
+            failFast true
+            // environment {
+            //     SYNK_TOKEN = 'f1ab0cbe-cf59-4834-9429-a0b4057e2e4a'
+            // }
+                  parallel {
+                    stage('dependency scan') {
+                        steps {
+                            container('snyk-python') {
+                                sh """
+                                    pip install -r jenkins-votingapp/vote/requirements.txt
+                                    snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
+                                    snyk test --json \
+                                    --file=jenkins-votingapp/vote/requirements.txt \
+                                    --severity-threshold=critical \
+                                    --org=mustafa.aykon \
+                                    --project-name=mustafaaykon/jenkins-votingapp
+                                """
+                                }
+                        }
+                    }
+                    stage('docker scan') {
+                        steps {
+                            container('snyk-docker') {
+                            sh """
+                                docker build -t jenkins_votingapp_vote ./jenkins-votingapp/vote
+                                snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
+                                snyk container test jenkins_votingapp_vote:latest --file=jenkins-votingapp/vote/Dockerfile --severity-threshold=critical --org=mustafa.aykon --project-name=mustafaaykon/jenkins-votingapp
+                            """
+                                }
+                            }
+                        }
+                    }
+            }   
 
         stage ('Install & Login') {
             steps {
