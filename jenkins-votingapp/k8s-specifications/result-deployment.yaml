@@ -21,4 +21,4 @@ spec:
         - containerPort: 80
           name: result
       imagePullSecrets:
-      - name: ecr_secret
+      - name: ecrsecret
