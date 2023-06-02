@@ -32,6 +32,14 @@ pipeline {
                 volumeMounts:
                  - mountPath: /var/run/docker.sock
                    name: docker-sock
+              - name: kubectl
+                image: bitnami/kubectl:latest
+                command:
+                - cat
+                tty: true
+                volumeMounts:
+                 - mountPath: /var/run/docker.sock
+                   name: docker-sock                
 
               volumes:
               - name: docker-sock
@@ -136,8 +144,12 @@ pipeline {
         stage ('Deploy to Kubernetes') {
             steps {
                 withKubeConfig() {
-                    sh 'kubectl apply -f jenkins-votingapp/k8s-specifications/db-deployment.yaml'
-                    sh 'kubectl apply -f jenkins-votingapp/k8s-specifications/db-service.yaml'
+                    script {
+                        container('kubectl') {
+                            sh 'kubectl apply -f jenkins-votingapp/k8s-specifications/db-deployment.yaml'
+                            sh 'kubectl apply -f jenkins-votingapp/k8s-specifications/db-service.yaml'
+                        }
+                    }
                 }
                 // script {
                 //     kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/db-deployment.yaml", "db-service.yaml")
