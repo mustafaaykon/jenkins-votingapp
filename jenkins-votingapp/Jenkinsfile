@@ -149,14 +149,14 @@ pipeline {
                     sh './kubectl get pods'
                     sh './kubectl apply -f jenkins-votingapp/k8s-specifications/db-deployment.yaml'
                     sh './kubectl apply -f jenkins-votingapp/k8s-specifications/db-service.yaml'
-                }
-                // script {
-                //     kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/db-deployment.yaml", "db-service.yaml")
-                //     kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/redis-deployment.yaml", "redis-service.yaml")
-                //     kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/result-deployment.yaml", "result-service.yaml")
-                //     kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/vote-deployment.yaml", "vote-service.yaml")
-                //     kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/worker-deployment.yaml")
-                // }
+                    sh './kubectl apply -f jenkins-votingapp/k8s-specifications/redis-deployment.yaml'
+                    sh './kubectl apply -f jenkins-votingapp/k8s-specifications/redis-service.yaml'
+                    sh './kubectl apply -f jenkins-votingapp/k8s-specifications/result-deployment.yaml'
+                    sh './kubectl apply -f jenkins-votingapp/k8s-specifications/result-service.yaml'
+                    sh './kubectl apply -f jenkins-votingapp/k8s-specifications/vote-deployment.yaml'
+                    sh './kubectl apply -f jenkins-votingapp/k8s-specifications/vote-service.yaml'
+                    sh './kubectl apply -f jenkins-votingapp/k8s-specifications/worker-deployment.yaml'
+                    }
             }
         }
 
