@@ -147,6 +147,8 @@ pipeline {
                     sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'  
                     sh 'chmod u+x ./kubectl'  
                     sh './kubectl get pods'
+                    sh './kubectl apply -f jenkins-votingapp/k8s-specifications/db-deployment.yaml'
+                    sh './kubectl apply -f jenkins-votingapp/k8s-specifications/db-service.yaml'
                 }
                 // script {
                 //     kubernetesDeploy(configs: "jenkins-votingapp/k8s-specifications/db-deployment.yaml", "db-service.yaml")
