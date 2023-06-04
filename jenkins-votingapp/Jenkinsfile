@@ -75,7 +75,6 @@ pipeline {
                                 }
                         }
                     }
-                    //snyk container test jenkins_votingapp_vote:latest --file=jenkins-votingapp/vote/Dockerfile --severity-threshold=critical --org=mustafa.aykon --project-name=mustafaaykon/jenkins-votingapp
 
                     stage('docker scan') {
                         steps {
