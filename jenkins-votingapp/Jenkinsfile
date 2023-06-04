@@ -80,7 +80,6 @@ pipeline {
                                     --all-projects \
                                     --severity-threshold=critical \
                                     --org=mustafa.aykon \
-                                    --project-name=mustafaaykon/jenkins-votingapp
                                 """
                                 }                            
                         }
