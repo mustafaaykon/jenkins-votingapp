@@ -100,10 +100,11 @@ pipeline {
                                 docker build -t jenkins_votingapp_worker ./jenkins-votingapp/worker
                                 snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
                                 snyk container monitor jenkins_votingapp_result:latest --file=jenkins-votingapp/worker/Dockerfile --severity-threshold=critical --org=mustafa.aykon --project-name=mustafaaykon/jenkins-votingapp
-                                snyk container test jenkins_votingapp_worker:latest --file=jenkins-votingapp/worker/Dockerfile --severity-threshold=critical --org=mustafa.aykon --project-name=mustafaaykon/jenkins-votingapp                                                                
-                                
+                                snyk container test jenkins_votingapp_worker:latest --file=jenkins-votingapp/worker/Dockerfile --severity-threshold=critical --org=mustafa.aykon --project-name=mustafaaykon/jenkins-votingapp                                                                                               
                             """
-                                }                           
+                                }
+                                
+                            }
                         }
                     }
             }   
@@ -183,10 +184,11 @@ pipeline {
                         sh './kubectl apply -f jenkins-votingapp/k8s-specifications/vote-service.yaml'
                         sh './kubectl apply -f jenkins-votingapp/k8s-specifications/worker-deployment.yaml'
                         sh 'echo kubernetes deployments applied successfully...'
-                        }
-                    }    
-                }
+                    }
+                }    
             }
-        }    
-    }
+        }
+
+    }    
 }
+//#
