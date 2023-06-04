@@ -82,9 +82,9 @@ pipeline {
                             sh """
                                 docker build -t jenkins_votingapp_vote ./jenkins-votingapp/vote
                                 snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
-                                snyk ignore --id='SNYK-DEBIAN11-CURL-3320493' --expiry='2023-12-31' --reason= 'Not currently exploitable'
                                 snyk container monitor jenkins_votingapp_vote:latest --file=jenkins-votingapp/vote/Dockerfile --severity-threshold=critical --org=mustafa.aykon --project-name=mustafaaykon/jenkins-votingapp
                                 snyk container test jenkins_votingapp_vote:latest --file=jenkins-votingapp/vote/Dockerfile --severity-threshold=critical --org=mustafa.aykon --project-name=mustafaaykon/jenkins-votingapp
+                                snyk ignore --id=SNYK-DEBIAN11-CURL-3320493 --expiry=2023-12-31 --reason= 'Not currently exploitable'
                             """
                                 }
                             }
