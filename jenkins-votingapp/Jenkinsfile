@@ -62,17 +62,27 @@ pipeline {
                   parallel {
                     stage('dependency scan') {
                         steps {
-                            container('snyk-python') {
+                            // container('snyk-python') {
+                            //     sh """
+                            //         pip install -r jenkins-votingapp/vote/requirements.txt
+                            //         snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
+                            //         snyk test --json \
+                            //         --file=jenkins-votingapp/vote/requirements.txt \
+                            //         --severity-threshold=critical \
+                            //         --org=mustafa.aykon \
+                            //         --project-name=mustafaaykon/jenkins-votingapp
+                            //     """
+                            //     }
+                            container('snyk-docker') {
                                 sh """
-                                    pip install -r jenkins-votingapp/vote/requirements.txt
                                     snyk auth f1ab0cbe-cf59-4834-9429-a0b4057e2e4a
                                     snyk test --json \
-                                    --file=jenkins-votingapp/vote/requirements.txt \
+                                    --all-projects \
                                     --severity-threshold=critical \
                                     --org=mustafa.aykon \
                                     --project-name=mustafaaykon/jenkins-votingapp
                                 """
-                                }
+                                }                            
                         }
                     }
 
